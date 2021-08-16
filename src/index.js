@@ -1,13 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-
 import App from "./components/App";
+import client from "./apollo";
+import { ApolloProvider } from "@apollo/client";
 
 // yarn add styled-components react-router-dom apollo-boost @apollo/react-hooks graphql
+// 변경 => yarn add styled-components react-router-dom @apollo/client graphql
 
 ReactDOM.render(
-  <React.StrictMode>
+  <ApolloProvider client={client}>
     <App />
-  </React.StrictMode>,
+  </ApolloProvider>,
   document.getElementById("root")
 );

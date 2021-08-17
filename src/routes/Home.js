@@ -39,6 +39,9 @@ const Title = styled.h1`
 
 const Subtitle = styled.h3`
   font-size: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 `;
 
 const Loading = styled.div`
@@ -46,6 +49,15 @@ const Loading = styled.div`
   opacity: 0.5;
   font-weight: 500;
   margin-top: 10px;
+`;
+
+const Movies = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 25px;
+  width: 70%;
+  position: relative;
+  top: -20px;
 `;
 
 const Home = () => {
@@ -58,13 +70,18 @@ const Home = () => {
         <Subtitle>I love GraphQL</Subtitle>
       </Header>
       {loading && <Loading>Loading...</Loading>}
-      {!loading &&
-        data.movies &&
-        data.movies.map((m) => (
-          <Movie key={m.id} id={m.id}>
-            {m.title}
-          </Movie>
-        ))}
+      {!loading && data.movies && (
+        <Movies>
+          {data.movies.map((m) => (
+            <Movie
+              key={m.id}
+              id={m.id}
+              title={m.title}
+              bg={m.medium_cover_image}
+            />
+          ))}
+        </Movies>
+      )}
     </Container>
   );
 };

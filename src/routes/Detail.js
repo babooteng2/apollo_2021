@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { gql, useQuery } from "@apollo/client";
 import styled from "styled-components";
 
@@ -10,6 +10,11 @@ const GET_MOVIE = gql`
       language
       rating
       description_intro
+    }
+    suggestions(id: $id) {
+      id
+      title
+      medium_cover_image
     }
   }
 `;
@@ -52,14 +57,42 @@ const Poster = styled.div`
   background-position: center center;
 `;
 
+const Suggestions = styled.div`
+  position: fixed;
+  bottom: 40px;
+  padding-top: 5px;
+  height: 100px;
+  width: 100vh;
+`;
+const Cards = styled.div`
+  display: flex;
+  & a {
+    text-decoration: none;
+  }
+  margin-top: 10px;
+`;
+const Thumb = styled.div`
+  color: white;
+  background-image: url(${(props) => props.bg});
+  background-size: cover;
+  background-position: center center;
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+`;
+
 const Detail = () => {
   const { id } = useParams();
   const { loading, data } = useQuery(GET_MOVIE, {
     variables: { id: +id },
   });
-
   const { title, language, rating, description_intro, medium_cover_image } =
     !loading && data ? data.movie : "";
+  const upper_lang = language?.toUpperCase();
+  const restricted_description_intro =
+    description_intro?.length > 650
+      ? description_intro?.substr(0, 650) + " ..."
+      : description_intro;
   return (
     <Container>
       <Column>
@@ -67,17 +100,25 @@ const Detail = () => {
         {!loading && data.movie && (
           <>
             <Subtitle>
-              {language.toUpperCase()} · {rating}
+              {upper_lang} · {rating}
             </Subtitle>
-            <Description>
-              {description_intro.length > 650
-                ? description_intro.substr(0, 650) + " ..."
-                : description_intro}
-            </Description>
+            <Description>{restricted_description_intro}</Description>
           </>
         )}
       </Column>
       <Poster bg={data && data.movie ? medium_cover_image : ""}></Poster>
+      <Suggestions>
+        {!loading && "Suggestions"}
+        <Cards>
+          {data?.suggestions?.map((m) => (
+            <Link to={`/${m.id}`}>
+              <Thumb bg={m.medium_cover_image}>
+                {loading ? "Loading..." : m.title}
+              </Thumb>
+            </Link>
+          ))}
+        </Cards>
+      </Suggestions>
     </Container>
   );
 };

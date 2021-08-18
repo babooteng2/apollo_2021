@@ -57,28 +57,31 @@ const Detail = () => {
   const { loading, data } = useQuery(GET_MOVIE, {
     variables: { id: +id },
   });
+
+  const { title, language, rating, description_intro, medium_cover_image } =
+    !loading && data ? data.movie : "";
   return (
     <Container>
       <Column>
-        <Title>{loading ? "Loading..." : data.movie.title}</Title>
+        <Title>{loading ? "Loading..." : title}</Title>
         {!loading && data.movie && (
           <>
             <Subtitle>
-              {data.movie.language.toUpperCase()} · {data.movie.rating}
+              {language.toUpperCase()} · {rating}
             </Subtitle>
             <Description>
-              {data.movie.description_intro.length > 650
-                ? data.movie.description_intro.substr(0, 650) + " ..."
-                : data.movie.description_intro}
+              {description_intro.length > 650
+                ? description_intro.substr(0, 650) + " ..."
+                : description_intro}
             </Description>
           </>
         )}
       </Column>
-      <Poster
-        bg={data && data.movie ? data.movie.medium_cover_image : ""}
-      ></Poster>
+      <Poster bg={data && data.movie ? medium_cover_image : ""}></Poster>
     </Container>
   );
 };
 
 export default Detail;
+
+/* install chrome extension - Apollo Client Devtools  */

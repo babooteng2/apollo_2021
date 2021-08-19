@@ -1,13 +1,22 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-//const BASE_URL = "http://localhost:4000";
-const ALTER_URL = "http://172.31.89.177:4000";
+const BASE_URL = "http://localhost:4000";
 const client = new ApolloClient({
-  uri: ALTER_URL,
+  uri: BASE_URL,
   cache: new InMemoryCache(),
   resolvers: {
     Movie: {
       isLiked: () => false,
+    },
+    Mutation: {
+      toggleLikeMoive: (_, { id }, { cache }) => {
+        cache.modify({
+          id: `Movie:${id}`,
+          fields: {
+            isLiked: (isLiked) => !isLiked,
+          },
+        });
+      },
     },
   },
 });

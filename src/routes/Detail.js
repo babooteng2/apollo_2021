@@ -111,7 +111,7 @@ const Detail = () => {
         {!loading && "Suggestions"}
         <Cards>
           {data?.suggestions?.map((m) => (
-            <Link to={`/${m.id}`}>
+            <Link to={`/${m.id}`} key={m.id}>
               <Thumb bg={m.medium_cover_image}>
                 {loading ? "Loading..." : m.title}
               </Thumb>

@@ -1,6 +1,13 @@
+import { gql, useMutation } from "@apollo/client";
 import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+
+const LIKE_MOVIE = gql`
+  mutation likeMovie($id: Int!) {
+    toggleLikeMoive(id: $id) @client
+  }
+`;
 
 const Container = styled.div`
   height: 350px;
@@ -10,6 +17,7 @@ const Container = styled.div`
   margin-bottom: 35px;
   & button {
     margin-top: 10px;
+    cursor: pointer;
   }
 `;
 const Poster = styled.div`
@@ -20,13 +28,18 @@ const Poster = styled.div`
   background-position: center center;
 `;
 
-const Movie = ({ id, bg, isLiked }) => (
-  <Container>
-    <Link to={`/${id}`}>
-      <Poster bg={bg} />
-    </Link>
-    <button>{isLiked ? "UnLike" : "Like"}</button>
-  </Container>
-);
+const Movie = ({ id, bg, isLiked }) => {
+  const [likeMovie] = useMutation(LIKE_MOVIE, {
+    variables: { id: parseInt(id) },
+  });
+  return (
+    <Container>
+      <Link to={`/${id}`}>
+        <Poster bg={bg} />
+      </Link>
+      <button onClick={likeMovie}>{isLiked ? "UnLike" : "Like"}</button>
+    </Container>
+  );
+};
 
 export default Movie;

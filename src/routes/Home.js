@@ -9,6 +9,7 @@ const GET_MOVIES = gql`
       id
       title
       medium_cover_image
+      isLiked @client
     }
   }
 `;
@@ -39,9 +40,6 @@ const Title = styled.h1`
 
 const Subtitle = styled.h3`
   font-size: 35px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
 `;
 
 const Loading = styled.div`
@@ -55,9 +53,9 @@ const Movies = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 25px;
-  width: 70%;
+  width: 60%;
   position: relative;
-  top: -20px;
+  top: -40px;
 `;
 
 const Home = () => {
@@ -70,18 +68,17 @@ const Home = () => {
         <Subtitle>I love GraphQL</Subtitle>
       </Header>
       {loading && <Loading>Loading...</Loading>}
-      {!loading && data.movies && (
-        <Movies>
-          {data.movies.map((m) => (
-            <Movie
-              key={m.id}
-              id={m.id}
-              title={m.title}
-              bg={m.medium_cover_image}
-            />
-          ))}
-        </Movies>
-      )}
+      <Movies>
+        {data?.movies?.map((m) => (
+          <Movie
+            key={m.id}
+            id={m.id}
+            title={m.title}
+            isLiked={m.isLiked}
+            bg={m.medium_cover_image}
+          />
+        ))}
+      </Movies>
     </Container>
   );
 };

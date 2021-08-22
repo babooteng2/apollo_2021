@@ -12,7 +12,7 @@ const client = new ApolloClient({
       toggleLikeMoive: (_, { id }, { cache }) => {
         cache.modify({
           id: `Movie:${id}`,
-          fields: {
+          data: {
             isLiked: (isLiked) => !isLiked,
           },
         });

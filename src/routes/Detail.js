@@ -5,11 +5,13 @@ import styled from "styled-components";
 const GET_MOVIE = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
+      id
       title
       medium_cover_image
       language
       rating
       description_intro
+      isLiked @client
     }
     suggestions(id: $id) {
       id
@@ -86,8 +88,14 @@ const Detail = () => {
   const { loading, data } = useQuery(GET_MOVIE, {
     variables: { id: +id },
   });
-  const { title, language, rating, description_intro, medium_cover_image } =
-    !loading && data ? data.movie : "";
+  const {
+    title,
+    language,
+    rating,
+    description_intro,
+    medium_cover_image,
+    isLiked,
+  } = !loading && data ? data.movie : "";
   const upper_lang = language?.toUpperCase();
   const restricted_description_intro =
     description_intro?.length > 650
@@ -96,7 +104,9 @@ const Detail = () => {
   return (
     <Container>
       <Column>
-        <Title>{loading ? "Loading..." : title}</Title>
+        <Title>
+          {loading ? "Loading..." : `${title} ${isLiked ? "💖" : "💔"}`}
+        </Title>
         {!loading && data.movie && (
           <>
             <Subtitle>
